@@ -94,24 +94,30 @@ public class PaintActivity extends AppCompatActivity {
         if(item.getItemId()==1){
             if(item.isChecked()){
                 item.setChecked(false);
+                myPainter.setBlurring(false);
             }
             else{
                 item.setChecked(true);
+                myPainter.setBlurring(true);
             }
         }
         else if(item.getItemId()==2){
             if(item.isChecked()){
                 item.setChecked(false);
+                myPainter.setColoring(false);
             }
             else{
                 item.setChecked(true);
+                myPainter.setColoring(true);
             }
         }
         else if(item.getItemId()==3){
             if(item.isChecked()){
+                myPainter.setPenWidth(3);
                 item.setChecked(false);
             }
             else{
+                myPainter.setPenWidth(5);
                 item.setChecked(true);
             }
         }

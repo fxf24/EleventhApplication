@@ -3,8 +3,11 @@ package com.example.qudqj_000.a2017_05_18;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -32,11 +35,13 @@ public class MyPainter extends View {
     public MyPainter(Context context) {
         super(context);
         mPaint.setColor(Color.BLACK);
+        mPaint.setStrokeWidth(3);
     }
 
     public MyPainter(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mPaint.setColor(Color.BLACK);
+        mPaint.setStrokeWidth(3);
     }
 
     @Override
@@ -50,6 +55,7 @@ public class MyPainter extends View {
 
     private void drawStamp(int x, int y){
         Bitmap img = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+
         mCanvas.drawBitmap(img, x, y, mPaint);
     }
 
@@ -129,8 +135,45 @@ public class MyPainter extends View {
             mBitmap.eraseColor(Color.WHITE);
         }
         catch(IllegalStateException e){
-            Toast.makeText(getContext(), "바꿀수 없음", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "지울수 없음", Toast.LENGTH_SHORT).show();
         }
         invalidate();
+    }
+
+    public void setPenWidth(int size){
+        if(size==5)
+            mPaint.setStrokeWidth(5);
+        else{
+            mPaint.setStrokeWidth(3);
+        }
+    }
+
+    public void setBlurring(boolean tf){
+        if(tf) {
+            BlurMaskFilter blur = new BlurMaskFilter(15,
+                    BlurMaskFilter.Blur.INNER);
+            mPaint.setMaskFilter(blur);
+        }
+        else{
+            mPaint.setMaskFilter(null);
+        }
+    }
+
+    public void setColoring(boolean tf){
+        if(tf) {
+            float[] array = {
+                    2, 0, 0, 0, -25f,
+                    0, 2, 0, 0, -25f,
+                    0, 0, 2, 0, -25f,
+                    0, 0, 0, 2, 0
+            };
+
+            ColorMatrix colorMatrix = new ColorMatrix(array);
+            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(colorMatrix);
+            mPaint.setColorFilter(filter);
+        }
+        else{
+            mPaint.setColorFilter(null);
+        }
     }
 }
