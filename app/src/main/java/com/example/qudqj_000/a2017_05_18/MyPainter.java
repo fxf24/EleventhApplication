@@ -11,7 +11,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -92,8 +94,8 @@ public class MyPainter extends View {
 
     public boolean Save(String file_name){
         try {
-            FileOutputStream out = new FileOutputStream(file_name);
-            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            FileOutputStream out = new FileOutputStream(file_name, false);
+            mBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.close();
             return true;
         } catch (FileNotFoundException e) {
@@ -104,11 +106,31 @@ public class MyPainter extends View {
         return false;
     }
 
+    public boolean Open(String file_name){
+        try {
+            FileInputStream in = new FileInputStream(file_name);
+            mCanvas.drawBitmap(BitmapFactory.decodeStream(in),0,0,mPaint);
+            in.close();
+            invalidate();
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public void setCheckboxChecked(boolean isCheckboxChecked){
         this.isCheckboxChecked = isCheckboxChecked;
     }
     public void clear(){
-        mBitmap.eraseColor(Color.WHITE);
+        try {
+            mBitmap.eraseColor(Color.WHITE);
+        }
+        catch(IllegalStateException e){
+            Toast.makeText(getContext(), "바꿀수 없음", Toast.LENGTH_SHORT).show();
+        }
         invalidate();
     }
 }

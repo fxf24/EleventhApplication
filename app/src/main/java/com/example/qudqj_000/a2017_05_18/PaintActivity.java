@@ -6,10 +6,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
+
+import java.io.File;
+
 
 public class PaintActivity extends AppCompatActivity {
     CheckBox checkBox;
@@ -21,6 +26,8 @@ public class PaintActivity extends AppCompatActivity {
         setContentView(R.layout.activity_paint);
         program();
         permissionCheck();
+        makeDirectory();
+        deleteFile();
     }
 
     void program(){
@@ -36,14 +43,100 @@ public class PaintActivity extends AppCompatActivity {
     }
 
     public void onClick(View v){
+        if(v.getId()==R.id.erase){
+            myPainter.clear();
+        }
+        if(v.getId()==R.id.open){
+            String path = getExternalPath()+ "img/sample.png";
 
+            if(myPainter.Open(path)){
+                Toast.makeText(this,"오픈", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(this,"파일이 없습니다.", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if(v.getId()==R.id.save){
+            String path = getExternalPath() + "img/sample.png";
+
+            if(myPainter.Save(path)){
+                Toast.makeText(this,"저장완료",Toast.LENGTH_SHORT).show();
+            }
+        }
+        if(v.getId()==R.id.rotate){
+
+        }
+        if(v.getId()==R.id.move){
+
+        }
+        if(v.getId()==R.id.scale){
+
+        }
+        if(v.getId()==R.id.skew){
+
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0,1,0,"Blurring");
+        menu.add(0,2,1,"Coloring");
+        menu.add(0,3,2,"Pen Width Big");
+        menu.add(1,4,3,"Pen Color RED");
+        menu.add(1,5,4,"Pen Color BLUE");
+
+        menu.setGroupCheckable(0,true,false);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==1){
+            if(item.isChecked()){
+                item.setChecked(false);
+            }
+            else{
+                item.setChecked(true);
+            }
+        }
+        else if(item.getItemId()==2){
+            if(item.isChecked()){
+                item.setChecked(false);
+            }
+            else{
+                item.setChecked(true);
+            }
+        }
+        else if(item.getItemId()==3){
+            if(item.isChecked()){
+                item.setChecked(false);
+            }
+            else{
+                item.setChecked(true);
+            }
+        }
+        else if(item.getItemId()==4){
+
+        }
+        else if(item.getItemId()==5){
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    void makeDirectory(){
+        String path = getExternalPath();
+
+        File file = new File(path + "img");
+        file.mkdir();
     }
 
     void permissionCheck() {
         int permissioninfo = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (permissioninfo == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getApplicationContext(),"SDcard 쓰기권한있음",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(),"SDcard 쓰기권한있음",Toast.LENGTH_SHORT).show();
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 Toast.makeText(this, "권한설명", Toast.LENGTH_SHORT).show();
@@ -61,5 +154,12 @@ public class PaintActivity extends AppCompatActivity {
         } else
             sdPath = getFilesDir() + "";
         return sdPath;
+    }
+
+    void deleteFile(){
+        String path = getExternalPath()+ "img/sample.png";
+
+        File file = new File(path);
+        file.delete();
     }
 }
