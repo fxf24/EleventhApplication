@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -29,8 +30,9 @@ public class MyPainter extends View {
     Bitmap mBitmap;
     Canvas mCanvas;
     Paint mPaint = new Paint();
-    boolean isCheckboxChecked;
+    boolean isCheckboxChecked, rotateImage, moveImage, biggerImage, skewImage;
     int oldX = -1, oldY = -1;
+    Matrix matrix = new Matrix();
 
     public MyPainter(Context context) {
         super(context);
@@ -55,6 +57,22 @@ public class MyPainter extends View {
 
     private void drawStamp(int x, int y){
         Bitmap img = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        if(rotateImage){
+            img = setRotate(img);
+            matrix.postRotate(-30);
+        }
+        else if(moveImage){
+            x +=10;
+            y +=10;
+        }
+        else if(biggerImage){
+            img = setScale(img);
+            matrix.postScale(.667f,.667f);
+        }
+        else if(skewImage){
+            img = setSkew(img);
+            matrix.postSkew(-0.2f, 0);
+        }
 
         mCanvas.drawBitmap(img, x, y, mPaint);
     }
@@ -88,6 +106,7 @@ public class MyPainter extends View {
                 mCanvas.drawLine(oldX, oldY, X, Y, mPaint);
                 invalidate();
             }
+
             if(isCheckboxChecked) {
                 drawStamp(X, Y);
             }
@@ -113,9 +132,14 @@ public class MyPainter extends View {
     }
 
     public boolean Open(String file_name){
+        clear();
         try {
             FileInputStream in = new FileInputStream(file_name);
-            mCanvas.drawBitmap(BitmapFactory.decodeStream(in),0,0,mPaint);
+            Bitmap img = BitmapFactory.decodeStream(in);
+            matrix.postScale(.5f,.5f);
+            img = Bitmap.createBitmap(img,0,0,img.getWidth(),img.getHeight(),matrix,true);
+            mCanvas.drawBitmap(img,getWidth()/4,getHeight()/4,mPaint);
+            matrix.postScale(2,2);
             in.close();
             invalidate();
             return true;
@@ -133,6 +157,7 @@ public class MyPainter extends View {
     public void clear(){
         try {
             mBitmap.eraseColor(Color.WHITE);
+
         }
         catch(IllegalStateException e){
             Toast.makeText(getContext(), "지울수 없음", Toast.LENGTH_SHORT).show();
@@ -150,8 +175,7 @@ public class MyPainter extends View {
 
     public void setBlurring(boolean tf){
         if(tf) {
-            BlurMaskFilter blur = new BlurMaskFilter(15,
-                    BlurMaskFilter.Blur.INNER);
+            BlurMaskFilter blur = new BlurMaskFilter(15, BlurMaskFilter.Blur.INNER);
             mPaint.setMaskFilter(blur);
         }
         else{
@@ -175,5 +199,42 @@ public class MyPainter extends View {
         else{
             mPaint.setColorFilter(null);
         }
+    }
+
+    public void setPenColorRed(){
+        mPaint.setColor(Color.RED);
+    }
+
+    public  void setPenColorBlue(){
+        mPaint.setColor(Color.BLUE);
+    }
+
+    public Bitmap setRotate(Bitmap bitmap){
+        matrix.postRotate(30);
+        return Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+    }
+
+    public void setRotateImage(boolean rotateImage){
+        this.rotateImage = rotateImage;
+    }
+
+    public void setTranslate(boolean move){
+        this.moveImage = move;
+    }
+
+    public void setBigImage(boolean scale){
+        this.biggerImage = scale;
+    }
+    public Bitmap setScale(Bitmap bitmap){
+        matrix.postScale(1.5f, 1.5f);
+        return Bitmap.createBitmap(bitmap, 0,0,bitmap.getWidth(), bitmap.getHeight(),matrix,true);
+    }
+
+    public void setSkewImage(boolean skewImage){
+        this.skewImage = skewImage;
+    }
+    public Bitmap setSkew(Bitmap bitmap){
+        matrix.postSkew(.2f, 0);
+        return Bitmap.createBitmap(bitmap, 0,0,bitmap.getWidth(), bitmap.getHeight(),matrix,true);
     }
 }

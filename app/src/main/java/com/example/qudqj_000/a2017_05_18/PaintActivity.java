@@ -64,16 +64,20 @@ public class PaintActivity extends AppCompatActivity {
             }
         }
         if(v.getId()==R.id.rotate){
-
+            checkBox.setChecked(true);
+            myPainter.setRotateImage(true);
         }
         if(v.getId()==R.id.move){
-
+            checkBox.setChecked(true);
+            myPainter.setTranslate(true);
         }
         if(v.getId()==R.id.scale){
-
+            checkBox.setChecked(true);
+            myPainter.setBigImage(true);
         }
         if(v.getId()==R.id.skew){
-
+            checkBox.setChecked(true);
+            myPainter.setSkewImage(true);
         }
     }
 
@@ -122,10 +126,10 @@ public class PaintActivity extends AppCompatActivity {
             }
         }
         else if(item.getItemId()==4){
-
+            myPainter.setPenColorRed();
         }
         else if(item.getItemId()==5){
-
+            myPainter.setPenColorBlue();
         }
 
         return super.onOptionsItemSelected(item);
