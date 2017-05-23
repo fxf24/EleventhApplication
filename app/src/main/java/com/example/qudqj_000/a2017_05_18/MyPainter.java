@@ -38,12 +38,14 @@ public class MyPainter extends View {
         super(context);
         mPaint.setColor(Color.BLACK);
         mPaint.setStrokeWidth(3);
+        this.setLayerType(LAYER_TYPE_SOFTWARE, null);
     }
 
     public MyPainter(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mPaint.setColor(Color.BLACK);
         mPaint.setStrokeWidth(3);
+        this.setLayerType(LAYER_TYPE_SOFTWARE, null);
     }
 
     @Override
@@ -175,7 +177,7 @@ public class MyPainter extends View {
 
     public void setBlurring(boolean tf){
         if(tf) {
-            BlurMaskFilter blur = new BlurMaskFilter(15, BlurMaskFilter.Blur.INNER);
+            BlurMaskFilter blur = new BlurMaskFilter(100, BlurMaskFilter.Blur.NORMAL);
             mPaint.setMaskFilter(blur);
         }
         else{

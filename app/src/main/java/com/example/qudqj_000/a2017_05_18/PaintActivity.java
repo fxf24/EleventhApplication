@@ -19,6 +19,7 @@ import java.io.File;
 public class PaintActivity extends AppCompatActivity {
     CheckBox checkBox;
     MyPainter myPainter;
+    int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +31,9 @@ public class PaintActivity extends AppCompatActivity {
         deleteFile();
     }
 
-    void program(){
-        checkBox = (CheckBox)findViewById(R.id.checkbox1);
-        myPainter = (MyPainter)findViewById(R.id.myPainter);
+    void program() {
+        checkBox = (CheckBox) findViewById(R.id.checkbox1);
+        myPainter = (MyPainter) findViewById(R.id.myPainter);
 
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -42,104 +43,122 @@ public class PaintActivity extends AppCompatActivity {
         });
     }
 
-    public void onClick(View v){
-        if(v.getId()==R.id.erase){
+    public void onClick(View v) {
+        if (v.getId() == R.id.erase) {
             myPainter.clear();
         }
-        if(v.getId()==R.id.open){
-            String path = getExternalPath()+ "img/sample.png";
-
-            if(myPainter.Open(path)){
-                Toast.makeText(this,"오픈", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                Toast.makeText(this,"파일이 없습니다.", Toast.LENGTH_SHORT).show();
-            }
-        }
-        if(v.getId()==R.id.save){
+        if (v.getId() == R.id.open) {
             String path = getExternalPath() + "img/sample.png";
 
-            if(myPainter.Save(path)){
-                Toast.makeText(this,"저장완료",Toast.LENGTH_SHORT).show();
+            if (myPainter.Open(path)) {
+                Toast.makeText(this, "오픈", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "파일이 없습니다.", Toast.LENGTH_SHORT).show();
             }
         }
-        if(v.getId()==R.id.rotate){
-            checkBox.setChecked(true);
-            myPainter.setRotateImage(true);
+        if (v.getId() == R.id.save) {
+            String path = getExternalPath() + "img/sample.png";
+
+            if (myPainter.Save(path)) {
+                Toast.makeText(this, "저장완료", Toast.LENGTH_SHORT).show();
+            }
         }
-        if(v.getId()==R.id.move){
+        if (v.getId() == R.id.rotate) {
             checkBox.setChecked(true);
-            myPainter.setTranslate(true);
+            if (count == 0) {
+                myPainter.setRotateImage(true);
+                count++;
+            } else {
+                myPainter.setRotateImage(false);
+                count = 0;
+            }
+
         }
-        if(v.getId()==R.id.scale){
+        if (v.getId() == R.id.move) {
             checkBox.setChecked(true);
-            myPainter.setBigImage(true);
+            if (count == 0) {
+                myPainter.setTranslate(true);
+                count++;
+            } else {
+                myPainter.setTranslate(false);
+                count = 0;
+            }
+
         }
-        if(v.getId()==R.id.skew){
+        if (v.getId() == R.id.scale) {
             checkBox.setChecked(true);
-            myPainter.setSkewImage(true);
+            if (count == 0) {
+                myPainter.setBigImage(true);
+                count++;
+            } else {
+                myPainter.setBigImage(false);
+                count = 0;
+            }
+
+        }
+        if (v.getId() == R.id.skew) {
+            checkBox.setChecked(true);
+            if (count == 0) {
+                myPainter.setSkewImage(true);
+                count++;
+            } else {
+                myPainter.setSkewImage(false);
+                count = 0;
+            }
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0,1,0,"Blurring");
-        menu.add(0,2,1,"Coloring");
-        menu.add(0,3,2,"Pen Width Big");
-        menu.add(1,4,3,"Pen Color RED");
-        menu.add(1,5,4,"Pen Color BLUE");
-        menu.add(1,6,5,"Pen Color Black");
+        menu.add(0, 1, 0, "Blurring");
+        menu.add(0, 2, 1, "Coloring");
+        menu.add(0, 3, 2, "Pen Width Big");
+        menu.add(1, 4, 3, "Pen Color RED");
+        menu.add(1, 5, 4, "Pen Color BLUE");
+        menu.add(1, 6, 5, "Pen Color Black");
 
-        menu.setGroupCheckable(0,true,false);
+        menu.setGroupCheckable(0, true, false);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==1){
-            if(item.isChecked()){
+        if (item.getItemId() == 1) {
+            if (item.isChecked()) {
                 item.setChecked(false);
                 myPainter.setBlurring(false);
-            }
-            else{
+            } else {
                 item.setChecked(true);
                 myPainter.setBlurring(true);
             }
-        }
-        else if(item.getItemId()==2){
-            if(item.isChecked()){
+        } else if (item.getItemId() == 2) {
+            if (item.isChecked()) {
                 item.setChecked(false);
                 myPainter.setColoring(false);
-            }
-            else{
+            } else {
                 item.setChecked(true);
                 myPainter.setColoring(true);
             }
-        }
-        else if(item.getItemId()==3){
-            if(item.isChecked()){
+        } else if (item.getItemId() == 3) {
+            if (item.isChecked()) {
                 myPainter.setPenWidth(3);
                 item.setChecked(false);
-            }
-            else{
+            } else {
                 myPainter.setPenWidth(5);
                 item.setChecked(true);
             }
-        }
-        else if(item.getItemId()==4){
+        } else if (item.getItemId() == 4) {
             myPainter.setPenColorRed();
-        }
-        else if(item.getItemId()==5){
+        } else if (item.getItemId() == 5) {
             myPainter.setPenColorBlue();
-        }
-        else if(item.getItemId()==6){
+        } else if (item.getItemId() == 6) {
             myPainter.setPenColorBlack();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    void makeDirectory(){
+    void makeDirectory() {
         String path = getExternalPath();
 
         File file = new File(path + "img");
@@ -170,8 +189,8 @@ public class PaintActivity extends AppCompatActivity {
         return sdPath;
     }
 
-    void deleteFile(){
-        String path = getExternalPath()+ "img/sample.png";
+    void deleteFile() {
+        String path = getExternalPath() + "img/sample.png";
 
         File file = new File(path);
         file.delete();
