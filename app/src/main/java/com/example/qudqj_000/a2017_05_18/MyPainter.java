@@ -237,4 +237,8 @@ public class MyPainter extends View {
         matrix.postSkew(.2f, 0);
         return Bitmap.createBitmap(bitmap, 0,0,bitmap.getWidth(), bitmap.getHeight(),matrix,true);
     }
+
+    public void setPenColorBlack() {
+        mPaint.setColor(Color.BLACK);
+    }
 }

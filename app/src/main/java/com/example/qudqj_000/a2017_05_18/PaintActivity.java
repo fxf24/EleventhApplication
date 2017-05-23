@@ -88,6 +88,7 @@ public class PaintActivity extends AppCompatActivity {
         menu.add(0,3,2,"Pen Width Big");
         menu.add(1,4,3,"Pen Color RED");
         menu.add(1,5,4,"Pen Color BLUE");
+        menu.add(1,6,5,"Pen Color Black");
 
         menu.setGroupCheckable(0,true,false);
         return true;
@@ -130,6 +131,9 @@ public class PaintActivity extends AppCompatActivity {
         }
         else if(item.getItemId()==5){
             myPainter.setPenColorBlue();
+        }
+        else if(item.getItemId()==6){
+            myPainter.setPenColorBlack();
         }
 
         return super.onOptionsItemSelected(item);
